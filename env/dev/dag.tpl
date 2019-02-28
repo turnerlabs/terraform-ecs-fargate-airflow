@@ -1,6 +1,6 @@
 from airflow import DAG
 from datetime import datetime, timedelta
-from fargate_ecs_plugin import FargateEcsOperator
+from airflow.operators.fargate_ecs_plugin import FargateEcsOperator
 
 namespace = '${app}-${environment}'
 
