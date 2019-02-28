@@ -13,6 +13,7 @@ default_args = {
     'cluster': namespace,
     'task_definition': namespace,
     'log_group_name': '/fargate/task/' + namespace,
+    'log_stream_name': 'fargate/app',
     'subnets': ${subnets},
     'securityGroups': ['${security_group}']
 }
