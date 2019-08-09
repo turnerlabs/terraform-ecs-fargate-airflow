@@ -1,7 +1,7 @@
 # grant airflow host role access to fargate
 resource "aws_iam_role_policy" "airflow_policy" {
   name = "airflow_policy_${var.app}-${var.environment}"
-  role = "${var.airflow_role}"
+  role = var.airflow_role
 
   policy = <<EOF
 {
@@ -45,4 +45,6 @@ resource "aws_iam_role_policy" "airflow_policy" {
   ]
 } 
 EOF
+
 }
+

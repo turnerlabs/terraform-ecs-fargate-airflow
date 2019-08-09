@@ -11,26 +11,32 @@ variable "region" {
 
 # Tags for the infrastructure
 variable "tags" {
-  type = "map"
+  type = map(string)
 }
 
 # The application's name
-variable "app" {}
+variable "app" {
+}
 
 # The environment that is being built
-variable "environment" {}
+variable "environment" {
+}
 
 # The VPC to use for the Fargate cluster
-variable "vpc" {}
+variable "vpc" {
+}
 
 # The private subnets, minimum of 2, that are a part of the VPC(s)
-variable "private_subnets" {}
+variable "private_subnets" {
+}
 
 # The public subnets, minimum of 2, that are a part of the VPC(s)
-variable "public_subnets" {}
+variable "public_subnets" {
+}
 
 # The shedule on which to run the fargate task in airflow
-variable "schedule_expression" {}
+variable "schedule_expression" {
+}
 
 # airflow worker ec2 role
 variable "airflow_role" {
@@ -38,7 +44,8 @@ variable "airflow_role" {
 }
 
 # s3 location where your DAGs are stored
-variable "airflow_dag_s3_bucket" {}
+variable "airflow_dag_s3_bucket" {
+}
 
 # locals
 
@@ -46,3 +53,4 @@ locals {
   namespace = "${var.app}-${var.environment}"
   log_group = "/fargate/task/${local.namespace}"
 }
+
