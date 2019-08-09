@@ -3,8 +3,8 @@ terraform {
 
   backend "s3" {
     region  = "us-east-1"
-    profile = "aws-cloudarch-prod:aws-cloudarch-prod-admin"
-    bucket  = "tf-state-tf12-airflow"
+    profile = ""
+    bucket  = ""
     key     = "dev.terraform.tfstate"
   }
 }
