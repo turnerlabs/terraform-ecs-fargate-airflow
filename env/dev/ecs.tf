@@ -56,7 +56,7 @@ DEFINITION
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
 resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name = "${local.namespace}-ecs"
+  name               = "${local.namespace}-ecs"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -66,7 +66,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
     actions = ["sts:AssumeRole"]
 
     principals {
-      type = "Service"
+      type        = "Service"
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
@@ -74,13 +74,13 @@ data "aws_iam_policy_document" "assume_role_policy" {
 
 # allow task execution role to work with ecr and cw logs
 resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
-  role = aws_iam_role.ecsTaskExecutionRole.name
+  role       = aws_iam_role.ecsTaskExecutionRole.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/CWE_IAM_role.html
 resource "aws_iam_role" "cloudwatch_events_role" {
-  name = "${local.namespace}-events"
+  name               = "${local.namespace}-events"
   assume_role_policy = data.aws_iam_policy_document.events_assume_role_policy.json
 }
 
@@ -90,7 +90,7 @@ data "aws_iam_policy_document" "events_assume_role_policy" {
     actions = ["sts:AssumeRole"]
 
     principals {
-      type = "Service"
+      type        = "Service"
       identifiers = ["events.amazonaws.com"]
     }
   }
@@ -99,28 +99,28 @@ data "aws_iam_policy_document" "events_assume_role_policy" {
 # allow events role to run ecs tasks
 data "aws_iam_policy_document" "events_ecs" {
   statement {
-    effect = "Allow"
-    actions = ["ecs:RunTask"]
+    effect    = "Allow"
+    actions   = ["ecs:RunTask"]
     resources = ["arn:aws:ecs:${var.region}:${data.aws_caller_identity.current.account_id}:task-definition/${aws_ecs_task_definition.app.family}:*"]
 
     condition {
-      test = "StringLike"
+      test     = "StringLike"
       variable = "ecs:cluster"
-      values = [aws_ecs_cluster.app.arn]
+      values   = [aws_ecs_cluster.app.arn]
     }
   }
 }
 
 resource "aws_iam_role_policy" "events_ecs" {
-  name = "${var.app}-${var.environment}-events-ecs"
-  role = aws_iam_role.cloudwatch_events_role.id
+  name   = "${var.app}-${var.environment}-events-ecs"
+  role   = aws_iam_role.cloudwatch_events_role.id
   policy = data.aws_iam_policy_document.events_ecs.json
 }
 
 # allow events role to pass role to task execution role and app role
 data "aws_iam_policy_document" "passrole" {
   statement {
-    effect = "Allow"
+    effect  = "Allow"
     actions = ["iam:PassRole"]
 
     resources = [
@@ -131,14 +131,20 @@ data "aws_iam_policy_document" "passrole" {
 }
 
 resource "aws_iam_role_policy" "events_ecs_passrole" {
-  name = "${var.app}-${var.environment}-events-ecs-passrole"
-  role = aws_iam_role.cloudwatch_events_role.id
+  name   = "${var.app}-${var.environment}-events-ecs-passrole"
+  role   = aws_iam_role.cloudwatch_events_role.id
   policy = data.aws_iam_policy_document.passrole.json
 }
 
+variable "logs_retention_in_days" {
+  type        = number
+  default     = 90
+  description = "Specifies the number of days you want to retain log events"
+}
+
 resource "aws_cloudwatch_log_group" "logs" {
-  name = local.log_group
+  name              = local.log_group
   retention_in_days = "14"
-  tags = var.tags
+  tags              = var.tags
 }
 
