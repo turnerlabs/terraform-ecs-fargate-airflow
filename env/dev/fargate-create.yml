@@ -7,17 +7,22 @@ templateType: ScheduledTask
 # file customization
 prompts:
 
+  - question: "Would you like an ECS event log dashboard?"
+    default: "yes"
+    filesToDeleteIfNo:
+      - "ecs-event-stream.tf"
+
   - question: "Would you like an IAM user that can be used for CI/CD pipelines?"
     default: "no"
     filesToDeleteIfNo:
       - "cicd.tf"
 
-  - question: "Would you like an integrated Secrets Manager secret?"
+  - question: "Would you like to use Secrets Manager for secrets?"
     default: "no"
     filesToDeleteIfNo:
       - "secretsmanager.tf"
 
-  - question: "Would you like an ECS event log dashboard?"
-    default: "yes"
+  - question: "Would you like to use SSM Parameter Store for secrets?"
+    default: "no"
     filesToDeleteIfNo:
-      - "ecs-event-stream.tf"
+      - "ssm-parameters.tf"
