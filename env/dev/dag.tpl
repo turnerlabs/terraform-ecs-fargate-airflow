@@ -1,6 +1,6 @@
 from airflow import DAG
 from datetime import datetime, timedelta
-from fargate_ecs_plugin import FargateEcsOperator
+from airflow.operators.fargate_ecs_plugin import FargateEcsOperator
 
 namespace = '${app}-${environment}'
 
@@ -13,6 +13,7 @@ default_args = {
     'cluster': namespace,
     'task_definition': namespace,
     'log_group_name': '/fargate/task/' + namespace,
+    'log_stream_name': 'fargate/app',
     'subnets': ${subnets},
     'securityGroups': ['${security_group}']
 }

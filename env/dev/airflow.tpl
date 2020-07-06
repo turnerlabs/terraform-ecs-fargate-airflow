@@ -14,4 +14,4 @@ docker-compose push
 REVISION=$(fargate task register -f docker-compose.yml)
 
 # deploy dag to airflow
-aws s3 cp ./dags/${dag}.py ${airflow_dag_s3_bucket}
+aws s3 sync ./dags ${airflow_dag_s3_bucket}
